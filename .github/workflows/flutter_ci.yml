@@ -6,7 +6,6 @@ on:
   pull_request:
     branches: [ main ]
 
-
 jobs:
   build:
 
@@ -30,4 +29,13 @@ jobs:
         run: flutter test
 
       - name: Build APK
-        run: flutter build apk
+        run: flutter build apk --release
+
+      - name: Upload Release APK to GitHub
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: build/app/outputs/flutter-apk/app-release.apk
+          tag: v1.0.${{ github.run_number }}
+          token: ${{ secrets.GH_TOKEN }}
+          name: "CI Release ${{ github.run_number }}"
+          body: "This is an automated release from GitHub Actions"
